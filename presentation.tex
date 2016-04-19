@@ -1,0 +1,354 @@
+%\documentclass[11pt,professionalfonts,hyperref={pdftex,pdfpagemode=none,pdfstartview=FitH}]{beamer}
+%\usepackage{times}
+\documentclass[11pt,professionalfonts]{beamer}
+\usefonttheme{serif}
+\usepackage{presentation_packages}
+\usepackage{multimedia}
+\usepackage{animate} % for animated gif
+
+
+\definecolor{mygray}{gray}{0.9}
+\definecolor{RoyalBlue}{rgb}{0.25,0.41,0.88}
+\def\Emph{\textcolor{RoyalBlue}}
+
+\definecolor{tmp}{rgb}{0.804,0.941,1.0}
+\setbeamercolor{numerical}{fg=black,bg=tmp}
+\setbeamercolor{exact}{fg=black,bg=red}
+
+\mode<presentation> 
+{
+  \usetheme{Warsaw}
+  \usefonttheme{serif}
+  \setbeamercovered{transparent}
+}
+
+\setbeamertemplate{footline}%{split theme}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fill]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm]{title in head/foot}
+%    \usebeamerfont{title in head/foot}\mypaper\hfill \insertframenumber/\inserttotalframenumber
+    \usebeamerfont{title in head/foot}\hfill \insertframenumber/\inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+} \setbeamercolor{box}{fg=black,bg=yellow}
+
+
+\title[2016 SSPI]{\large\bf  Geometric Adaptive Control of Attitude Dynamics on \(\SO \) with State Inequality Constraints}
+
+\author{\vspace*{-0.3cm}}
+
+%\institute{\footnotesize
+%{\normalsize Shankar Kulumani}\vspace*{0.2cm}\\
+%  Flight Dynamics and Control Lab \\ 
+%  Dept. of Mechanical and Aerospace Engineering\\ 
+%  The George Washington University \\
+%  Washington, DC\\ \vspace{10pt}
+%  June 4, 2014 \\ \vspace{10pt}
+%  }
+   
+\institute{
+	\footnotesize
+	{\normalsize\bf{Shankar Kulumani and Christopher Poole}}
+	\vspace*{0.2cm}
+  	\bf{Flight Dynamics \& Control Lab}\\ \vspace*{0.5cm}
+ 	\begin{figure} %figure%
+       	\includegraphics[width=0.75\textwidth]{gw_txh_2cs_pos}
+  	\end{figure}
+}
+\date{}
+
+\begin{document}
+%=======================================================%
+
+\setcounter{framenumber}{-1}
+\begin{frame} %-----------------------------%
+  \titlepage
+\end{frame}   %-----------------------------%
+
+\section*{}
+\subsection*{Introduction}  
+
+\begin{frame}[t]{Motivation} %-----------------------------%
+\begin{itemize}
+	\item Autonomous control of space vehicles is a critical
+	\begin{itemize}
+		\item Avoid extensive planning and interaction by operators
+		\item Ability to operate safely with uncertainty 
+		\item Independently navigate hazards and handle possible failures
+	\end{itemize}
+\end{itemize}
+\visible<2->{
+\begin{figure} 
+	\centering 	
+	\begin{subfigure}[b]{0.5\textwidth} 
+		\includegraphics[height=0.35\textheight]{hubble}
+	\end{subfigure}~\quad~
+	\begin{subfigure}[b]{0.5\textwidth} 
+		\includegraphics[height=0.35\textheight]{ors-1}
+	\end{subfigure}
+\end{figure}
+}
+\end{frame}   %-----------------------------%
+
+\begin{frame}[t]{Problem} %-----------------------------------%
+\begin{itemize}
+	\item \Emph{Rigid body attitude control} : reorient vehicle while avoiding pointing at obstacles
+	\begin{itemize}
+		\item Exclusion zones for payloads e.g infrared telescope
+		\item UAVs manuevering in congested locations
+		\item Laser/Radio emitters on spacecraft
+	\end{itemize}
+	\pause
+	\item Previous approaches have several issues
+	\begin{itemize}
+		\item Attitude parameterizations: singularities/ambiguities
+		\item Ad-hoc geometric approach: difficult to generalize 
+		\item Randomized methods: lack of stability guarantees
+		\item Optimization based: expensive to compute and only open-loop control  
+	\end{itemize}
+\end{itemize}
+\end{frame} %-------------------------------------%
+
+\begin{frame}{Objective} %---------------------------------------%
+
+	\begin{block}{Control input}
+		Design control input \( u \) that stabilizes system from initial attitude \( R_0 \) to desired attitude \( R_d \) while avoiding obstacles
+	\end{block}
+	\pause
+	\begin{itemize}
+		\item Avoid drawbacks of other approaches 
+		\begin{itemize}
+			\item \Emph{Geometric Control} - analysis is conducted directly on \( \SO \) 
+			\item \Emph{Barrier function} - allows for arbitrary amount of constraints
+			\item \Emph{Efficient } - real time feedback control
+			\item \Emph{Stability} - Lyapunov analysis gives rigourous stability proof
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Spacecraft Orientation} %-----------------------------%
+
+\begin{itemize}
+
+	\item \Emph{Attitude Representation}: rotation matrix from body to inertial frame
+	 \[\SO =  \{R\in\R^{3\times 3}\,|\, R^TR=I,\;\mathrm{det}[R]=1\} \]
+	\item Rigid body attitude dynamics:
+	\begin{gather*}
+		J\dot\Omega + \Omega\times J\Omega = u+W(R,\Omega)\Delta \quad \dot R = R\hat\Omega
+	\end{gather*}
+
+	\item Obstacles defined by units vectors in \( \R^3 \) 
+		\begin{itemize}
+			\item Body fixed sensor: \( r \in \S^2\)
+			\item Inertially fixed hazard: \( v \in \S^2 \)
+		\end{itemize} 
+	\item Hard Cone constraint: \( r^T R^T v \leq \cos \theta \)
+	
+\end{itemize}
+\end{frame}   %-----------------------------%
+
+\section*{}
+\subsection*{Attitude Control}  
+
+\begin{frame}{Configuration Error Function} %-----------------------------%
+\only<1>{
+\begin{itemize}
+	\item Error function quantifies ``distance'' to desired attitude
+        \[
+        	\Psi(R) = A(R) B(R) 
+        \]
+	\item Combination of attractive and repulsive terms   
+\end{itemize}
+\begin{gather*}
+	A(R) = \frac{1}{2} \tr{G \left( I - R_d^T R\right)} \\ \\
+	B_i(R) = 1 - \frac{1}{\alpha_i} \ln \left( - \frac{ r^T R^T v_i - \cos \theta_i}{1 + \cos \theta_i}\right)
+\end{gather*}     
+}
+
+\only<2>{
+	\begin{itemize}
+		\item Attractive well at desired attitude
+	\end{itemize}
+	\[
+	A(R) = \frac{1}{2} \tr{G \left( I - R_d^T R\right)}
+	\]
+	\begin{figure} 
+		\centering
+		\includegraphics[height=0.6\textheight]{attract_error}
+	\end{figure}
+}
+
+\only<3>{
+	\begin{itemize}
+		\item Define regions of large error around obstacles
+	\end{itemize}
+	\[
+	B_i(R) = 1 - \frac{1}{\alpha_i} \ln \left( - \frac{ r^T R^T v_i - \cos \theta_i}{1 + \cos \theta_i}\right)
+	\]
+	\begin{figure}
+		\centering
+		\includegraphics[height=0.6\textheight]{avoid_error}
+	\end{figure}
+
+}
+
+\only<4>{
+	\begin{itemize}
+		\item Control is chosen to follow the slope of the error function towards the minimum at the desired attitude
+	\end{itemize}
+	\[
+		\Psi(R) = A(R) B(R) 
+	\]
+	\begin{figure}
+		\centering
+		\includegraphics[height=0.6\textheight]{combined_error}
+	\end{figure}
+}
+\end{frame}   %-----------------------------%
+
+
+\begin{frame}{Adaptive Attitude Control} %-----------------------------%
+\begin{itemize}
+	\item Control input: function of \( \Psi \) to achieve stability properties
+	\item Adaptive term handles constant unknown disturbances 
+		\begin{itemize}
+			\item Stuck actuator or gravity gradient moment
+		\end{itemize}
+\end{itemize}
+\pause
+	\begin{block}{Adaptive Attitude Controller}
+		Zero equilibrium of error vectors are Lyapunov stable, furthermore \( e_R , e_\Omega \to 0 \) as \( t \to \infty \)
+		\begin{align*}
+			u &= - k_R e_R - k_{\Omega} e_{\Omega} + \Omega \times J \Omega - W \bar{\Delta} \\
+			\dot{\bar{\Delta}} &= k_\Delta W^T \parenth{ e_\Omega + c e_R }
+		\end{align*}
+	\end{block}
+	
+\end{frame}   %-----------------------------%
+
+\begin{frame}{Numerical Simulation} %-----------------------------%
+
+\begin{itemize}
+	\item Simulate a S/C completing a yaw rotation
+	\item Single obstacle in the path of sensor
+\end{itemize}
+
+\animategraphics[autoplay,loop,width=0.5\textwidth]{8}{./animation/single_noavoid/single_noavoid-}{0}{99}~
+\animategraphics[autoplay,loop,width=0.5\textwidth]{8}{./animation/single_avoid/single_avoid-}{0}{99}
+\end{frame}%-----------------------------%
+
+\begin{frame}{Multiple obstacles}%-------------------------------------%
+
+\begin{itemize}
+	\item Easily handle multiple arbitrary constraints 
+	\begin{align*}
+		\Psi = A(R) \bracket{1 + \sum_i C_i(R)} \quad C_i = B(R) - 1
+	\end{align*}
+\end{itemize}
+\begin{figure}
+	\centering
+	\animategraphics[autoplay,loop,width=0.5\textwidth]{8}{./animation/multiple_avoid/multiple_avoid-}{0}{99}
+\end{figure}
+
+\end{frame}%---------------------------------------%
+
+\begin{frame}{Hexrotor Design} %--------------------%
+	\begin{itemize}
+		\item Three pairs of counter-rotating propellers
+		\item Custom built carbon fiber frame
+		\item Multi-threaded C on Linux ORDROID XU3
+		\item Onboard IMU and Vicon motion capture system
+	\end{itemize}
+	
+	\begin{figure} 
+		\centering 
+		\begin{subfigure}[htbp]{0.5\textwidth} 
+			\includegraphics[width=\textwidth]{hexrotor} 
+		\end{subfigure}~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. %(or a blank line to force the subfigure onto a new line) 
+		\begin{subfigure}[htbp]{0.5\textwidth} 
+			\includegraphics[width=\textwidth]{vn-100-rugged} 
+		\end{subfigure}
+	\end{figure}
+\end{frame} %-----------------------%
+
+\begin{frame}{Hexrotor Experiment} %-----------------------------%
+\begin{itemize}
+	\item Attached to spherical joint to allow only attitude dynamics
+\end{itemize}
+\begin{figure}
+\centering
+\movie[externalviewer,height=0.7\textheight]{\includegraphics[height=0.7\textheight]{hexrotor}}{experiment.mp4} 
+\end{figure}
+\end{frame}   %-----------------------------%
+
+\begin{frame}{Conclusions} %-----------------------------%
+
+	\begin{itemize}
+		\item Constrained geometric adaptive controller on \( \SO \)
+		\begin{itemize}
+			\item Completely avoids singularities and ambiguities 
+			\item Geometrically exact and simple attitude controller
+			\item Automatically satisfies multiple constraints 
+		\end{itemize}
+		\pause
+		\item Obstacle avoidance computed onboard and in real-time
+		\begin{itemize}
+			\item Ideal for aggressive global manuevers
+			\item Computationally efficient and ideal for embedded systems 
+			\item Rigourous stability proof 
+		\end{itemize}
+	\end{itemize}
+
+\end{frame}   %-----------------------------%
+
+\section*{}
+\subsection*{Backup}
+
+\begin{frame}[noframenumbering,label=parameterizations]{Attitude Parameterizations}
+	\begin{itemize}
+		\item Euler Angles
+		\begin{itemize}
+			\item Minimal representation used for small attitude changes.
+			\item Singularities exist for large angle slews: requires switching between 24 sequences
+			\item Complicated trigonometric functions
+		\end{itemize}
+		\pause
+		\item Quaternion 
+		\begin{itemize}
+			\item No singularities
+			\item Two anti-podal quaternions for the same attitude
+			\item Unwinding behavior 
+		\end{itemize}
+		\pause
+		\item Geometric control
+		\begin{itemize}
+			\item Globally and uniquely characterize attitude: \( R \in \SO \)
+			\item Singular representation of attitude 
+			\item Geometrically exact
+		\end{itemize}
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}[noframenumbering,label=proof]{Lyapunov Analysis}
+\begin{itemize}
+	\item Positive definite Lyapunov function
+	\begin{gather*}
+		\mathcal{V} = \frac{1}{2} e_\Omega \cdot J e_\Omega + k_R \Psi + c J e_\Omega \cdot e_R + \frac{1}{2 k_\Delta} e_\Delta \cdot e_\Delta . \label{eqn:v_adapt}
+	\end{gather*}
+	\item Negative semi-definite \( \dot{\mathcal{V}} \) with \(\zeta=[\|e_R\|,\|e_\Omega\|]\in\R^2\)
+	\begin{gather*}
+		\dot{\mathcal{V}} \leq -\zeta^T M \zeta .
+	\end{gather*}
+	\item LaSalle's invariance theorem implies that \(\lim_{t\to\infty} \zeta=0\).
+\end{itemize}
+\end{frame}
+
+
+
+\end{document}
+
