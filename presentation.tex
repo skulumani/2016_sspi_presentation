@@ -73,7 +73,7 @@
 
 \begin{frame}[t]{Motivation} %-----------------------------%
 \begin{itemize}
-	\item Autonomous control of space vehicles is a critical
+	\item Autonomous control of space vehicles is critical
 	\begin{itemize}
 		\item Avoid extensive planning and interaction by operators
 		\item Ability to operate safely with uncertainty 
@@ -239,6 +239,7 @@
 
 \animategraphics[autoplay,loop,width=0.5\textwidth]{8}{./animation/single_noavoid/single_noavoid-}{0}{99}~
 \animategraphics[autoplay,loop,width=0.5\textwidth]{8}{./animation/single_avoid/single_avoid-}{0}{99}
+
 \end{frame}%-----------------------------%
 
 \begin{frame}{Multiple obstacles}%-------------------------------------%
@@ -249,6 +250,7 @@
 		\Psi = A(R) \bracket{1 + \sum_i C_i(R)} \quad C_i = B(R) - 1
 	\end{align*}
 \end{itemize}
+
 \begin{figure}
 	\centering
 	\animategraphics[autoplay,loop,width=0.5\textwidth]{8}{./animation/multiple_avoid/multiple_avoid-}{0}{99}
@@ -258,19 +260,20 @@
 
 \begin{frame}{Hexrotor Design} %--------------------%
 	\begin{itemize}
-		\item Three pairs of counter-rotating propellers
-		\item Custom built carbon fiber frame
-		\item Multi-threaded C on Linux ORDROID XU3
-		\item Onboard IMU and Vicon motion capture system
+		\item Three pairs of counter-rotating propellers, angled at \SI{15}{\degree}
+		\item Excellent stability and control of attitude 
+		\item Multi-threaded C on Linux ODROID XU3
+		\item Onboard IMU (angular velocities) and Vicon motion capture system (quaternions)
+		\item Controlled remotely via SSH connection
 	\end{itemize}
 	
 	\begin{figure} 
 		\centering 
-		\begin{subfigure}[htbp]{0.5\textwidth} 
-			\includegraphics[width=\textwidth]{hexrotor} 
-		\end{subfigure}~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. %(or a blank line to force the subfigure onto a new line) 
-		\begin{subfigure}[htbp]{0.5\textwidth} 
-			\includegraphics[width=\textwidth]{vn-100-rugged} 
+		\begin{subfigure}[b]{0.4\textwidth} 
+			\includegraphics[height=0.4\textheight]{hexrotor_no_background} 
+		\end{subfigure}\hfill %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. %(or a blank line to force the subfigure onto a new line) 
+		\begin{subfigure}[b]{0.4\textwidth} 
+			\includegraphics[height=0.4\textheight]{vn-100-rugged} 
 		\end{subfigure}
 	\end{figure}
 \end{frame} %-----------------------%
